@@ -1,10 +1,10 @@
 import { deleteDoc, doc } from "firebase/firestore";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { toast } from "react-toastify";
-import { db, storage } from "../../firebase/config";
+import { db } from "../../firebase/config";
 import Modal from "../Modal";
 import { useRef, useState } from "react";
-import { deleteObject, ref } from "firebase/storage";
+import { deleteImageFromStorage } from "../../utils/deleteImageFromStorage";
 
 const Dropdown = ({ tweet }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -18,18 +18,12 @@ const Dropdown = ({ tweet }) => {
     // tweeti sildikten sonra dosyayı da silmek için dosya adını elde ediyoruz
     const filePath = tweet.imageContent
 
-    const lastIndex = filePath?.lastIndexOf("/")
-    const Index = filePath?.indexOf("?")
-    let fileName = filePath?.slice(lastIndex + 1, Index)
-    fileName = decodeURIComponent(fileName)
     // dökümanı sil
     deleteDoc(refDoc)
       .then(() => {
         toast.info("Tweet silindi")
         // resmi storageden kaldırıyoruz
-        deleteObject(ref(storage, fileName))
-          .then(() => console.log("Resim storageden kaldırıldı"))
-          .catch((err) => console.log("Resim storageden silinemedi " + err.code))
+        deleteImageFromStorage(filePath)
       })
       .catch((err) => toast.error("Bir sorun oluştu " + err.code))
   }

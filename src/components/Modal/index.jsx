@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { upload } from "../../utils/upload";
 import { useState } from "react";
 import Loader from "../Loader";
+import { deleteImageFromStorage } from "../../utils/deleteImageFromStorage";
 
 const Modal = ({ tweet, setIsModalOpen }) => {
    const [isLoading, setIsLoading] = useState(false)
@@ -17,8 +18,9 @@ const Modal = ({ tweet, setIsModalOpen }) => {
       // forma erişelim
       const text = e.target.text.value
       const file = e.target.file.files[0]
-
-      // güncellenecek döcümanın referansı
+      // slinecek eski foto
+      const filePath = tweet.imageContent
+      // güncellenecek dökümanın referansı
       const refDoc = doc(db, "tweets", tweet.id)
 
       if (!file && !file?.type.startsWith("image")) {
@@ -38,8 +40,11 @@ const Modal = ({ tweet, setIsModalOpen }) => {
             isEdited: true,
             imageContent: fileUrl,
          })
-            .then(() => {
-               toast.success("Güncelleme başarılı")
+         .then(() => {
+            toast.success("Güncelleme başarılı")
+            
+            // varsa eski fotoyu sil
+            filePath && deleteImageFromStorage(filePath)
             })
             .catch((err) => toast.error("Güncelleme başarısız.." + err.code))
 

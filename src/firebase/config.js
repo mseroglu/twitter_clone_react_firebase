@@ -26,3 +26,5 @@ export const db = getFirestore(app)
 
 // dosyaları saklayacağımız storage ın referansını alıyoruz
 export const storage = getStorage(app)
+
+
