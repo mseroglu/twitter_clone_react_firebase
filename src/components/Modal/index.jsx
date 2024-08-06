@@ -9,6 +9,7 @@ import Loader from "../Loader";
 const Modal = ({ tweet, setIsModalOpen }) => {
    const [isLoading, setIsLoading] = useState(false)
 
+  
    const handleSubmit = async (e) => {
       e.preventDefault()
 
